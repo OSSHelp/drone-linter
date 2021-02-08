@@ -34,7 +34,7 @@ steps:
         - README.md
       python_files:
         - test.py
-      python_files:
+      json_files:
         - file.json
 ```
 
