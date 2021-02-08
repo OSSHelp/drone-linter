@@ -34,6 +34,8 @@ steps:
         - README.md
       python_files:
         - test.py
+      python_files:
+        - file.json
 ```
 
 ### Skip checks
@@ -48,6 +50,7 @@ steps:
       skip_dockerfile: true
       skip_markdown: true
       skip_python: true
+      skip_json: true
 ```
 
 ### Exclude files by exclude_regex
@@ -77,6 +80,7 @@ There is no difference between the DockerHub image and the oss.help/drone image.
 - [yamllint](https://yamllint.readthedocs.io/en/stable/)
 - [flake8](http://flake8.pycqa.org/en/latest/user/error-codes.html)
 - [markdownlint](https://github.com/DavidAnson/markdownlint)
+- [jsonlint](https://github.com/zaach/jsonlint)
 
 ## TODO
 

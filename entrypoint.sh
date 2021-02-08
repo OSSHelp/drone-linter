@@ -26,6 +26,10 @@ function find_markdown_files() {
     find . -name '*.md' | sed 's|./||' | grep -vE "$exclude_regex"
 }
 
+function find_json_files() {
+    find . -name '*.json' | sed 's|./||' | grep -vE "$exclude_regex"
+}
+
 function linter() {
     local linter="$1"; local files="$2"
     for file in ${files//,/ }; do
@@ -50,6 +54,8 @@ function prepare_vars() {
     PLUGIN_PYTHON_FILES="${PLUGIN_LINTER_PYTHON_FILES:-$PLUGIN_PYTHON_FILES}"
     PLUGIN_SKIP_MARKDOWN="${PLUGIN_LINTER_SKIP_MARKDOWN:-$PLUGIN_SKIP_MARKDOWN}"
     PLUGIN_MARKDOWN_FILES="${PLUGIN_LINTER_MARKDOWN_FILES:-$PLUGIN_MARKDOWN_FILES}"
+    PLUGIN_SKIP_JSON="${PLUGIN_LINTER_SKIP_JSON:-$PLUGIN_SKIP_JSON}"
+    PLUGIN_JSON_FILES="${PLUGIN_LINTER_JSON_FILES:-$PLUGIN_JSON_FILES}"
 
     exclude_regex="${PLUGIN_EXCLUDE_REGEX:-^NO_EXCLUDE_FILES\$}"
     test -z "$PLUGIN_SKIP_YML" && yml_files="${PLUGIN_YML_FILES:-$(find_yml_files)}"
@@ -57,6 +63,7 @@ function prepare_vars() {
     test -z "$PLUGIN_SKIP_DOCKERFILE" && dockerfiles="${PLUGIN_DOCKERFILES:-$(find_dockerfiles)}"
     test -z "$PLUGIN_SKIP_PYTHON" && python_files="${PLUGIN_PYTHON_FILES:-$(find_python_files)}"
     test -z "$PLUGIN_SKIP_MARKDOWN" && markdown_files="${PLUGIN_MARKDOWN_FILES:-$(find_markdown_files)}"
+    test -z "$PLUGIN_SKIP_JSON" && json_files="${PLUGIN_JSON_FILES:-$(find_json_files)}"
 }
 
 # shellcheck disable=SC2078,SC2166
@@ -66,6 +73,7 @@ function prepare_linters() {
     [ -f ".flake8" ] && flake8='flake8' || flake8='flake8 --ignore=F401,E501'
     shellcheck='shellcheck'
     hadolint='hadolint'
+    jsonlint='jsonlint -q'
 }
 
 prepare_vars
@@ -76,5 +84,6 @@ linter "$shellcheck" "$sh_files"
 linter "$hadolint" "$dockerfiles"
 linter "$markdownlint" "$markdown_files"
 linter "$flake8" "$python_files"
+linter "$jsonlint" "$json_files"
 
 exit "$err"
