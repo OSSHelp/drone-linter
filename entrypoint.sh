@@ -3,8 +3,9 @@
 
 [ "${PLUGIN_DEBUG}" = "true" ] && { set -x; env; }
 
-function show_notice() { echo -e "\e[34m[NOTICE. $(date '+%Y/%m/%d-%H:%M:%S')] $1\e[39m"; }
-function show_warning() { echo -e "\e[31m[WARNING. $(date '+%Y/%m/%d-%H:%M:%S')] $1\e[39m" >&2; err=1; }
+function show_notice()  { echo -e "\e[34m[NOTICE. $(date '+%Y/%m/%d-%H:%M:%S')]\e[39m ${1}"; }
+function show_warning() { echo -e "\e[31m[WARNING. $(date '+%Y/%m/%d-%H:%M:%S')]\e[39m ${1}" >&2; err=1; }
+function show_error()   { echo -e "\e[31m[ERROR. $(date '+%Y/%m/%d-%H:%M:%S')]\e[39m ${1}" >&2; exit 1; }
 
 function find_yml_files() {
     find . -iname '*.yml' -o -iname '*.yaml' | grep -v '\./vault.yml' | sed 's|./||' | grep -vE "$exclude_regex"
