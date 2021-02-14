@@ -3,6 +3,9 @@
 
 [ "${PLUGIN_DEBUG}" = "true" ] && { set -x; env; }
 
+# no new line
+function show_pre_notice() { echo -en "\e[34m[NOTICE. $(date '+%Y/%m/%d-%H:%M:%S')]\e[39m ${1}"; }
+# standart output
 function show_notice()  { echo -e "\e[34m[NOTICE. $(date '+%Y/%m/%d-%H:%M:%S')]\e[39m ${1}"; }
 function show_warning() { echo -e "\e[31m[WARNING. $(date '+%Y/%m/%d-%H:%M:%S')]\e[39m ${1}" >&2; err=1; }
 function show_error()   { echo -e "\e[31m[ERROR. $(date '+%Y/%m/%d-%H:%M:%S')]\e[39m ${1}" >&2; exit 1; }
@@ -32,11 +35,11 @@ function find_json_files() {
 }
 
 function linter() {
-    local linter="$1"; local files="$2"
-    for file in ${files//,/ }; do
-        show_notice "Linting $file file"
-        $linter "$file" && echo -e "\e[32mOK\e[39m" \
-        || show_warning "Linting $file file failed"
+    local linter="${1}"; local files="${2}"
+    for target_file in ${files//,/ }; do
+        show_pre_notice "Linting ${target_file} file - "
+        $linter "${target_file}" && echo -e "\e[32mOK\e[39m" \
+        || echo -e "\e[31mFAIL\e[39m"
     done
 }
 
@@ -87,4 +90,4 @@ linter "$markdownlint" "$markdown_files"
 linter "$flake8" "$python_files"
 linter "$jsonlint" "$json_files"
 
-exit "$err"
+exit "${err}"
