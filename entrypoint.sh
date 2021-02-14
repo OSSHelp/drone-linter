@@ -39,7 +39,7 @@ function linter() {
     for target_file in ${files//,/ }; do
         show_pre_notice "Linting ${target_file} file - "
         $linter "${target_file}" && echo -e "\e[32mOK\e[39m" \
-        || echo -e "\e[31mFAIL\e[39m"
+        || { echo -e "\e[31mFAIL\e[39m"; err=1; }
     done
 }
 
